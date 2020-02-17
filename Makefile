@@ -61,7 +61,7 @@ $(BIN_FILE): $(ELF_FILE)
 	@$(OBJCOPY) $(OFLAGS) $< $@
 $(IMG_FILE): $(BIN_FILE)
 	@$(MAKE) -C $(TOOLS_DIR) BIN_FILE=$(BIN_FILE) IMG_FILE=$(IMG_FILE) FILE_SIZE=$(FILE_SIZE)
-run:
+run: all
 	qemu-system-x86_64 $(IMG_FILE)
 clean:
 	@$(MAKE) -C $(TOOLS_DIR) clean

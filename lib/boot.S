@@ -8,6 +8,8 @@ processmove:
 	mov %cs, %ax
 	mov %ax, %ds
 	mov %ax, %ss
+	mov $0xffff, %bp
+	mov $0xffff, %sp
 	mov $0x0, %ax
         mov %ax, %es
         mov $0x2, %ah
@@ -21,33 +23,55 @@ processmove:
 	mov $(BOOT_START + failmsg - start), %bp  
 	mov $(failmsgend - failmsg), %cx  
 	jc printstr
-	mov $CODE_START, %ax
-	add $(goto - start), %ax
+	mov $(CODE_START + goto - start), %ax
 	jmp *%ax
 goto:
 	mov $(STACK_START + STACK_LEN - 1), %bp
 	mov $(STACK_START + STACK_LEN - 1), %sp
-	call main	
-	mov $(BOOT_START + backmsgend - start), %bp  
+	calll main	
+	mov $(CODE_START + backmsg - start), %bp  
 	mov $(backmsgend - backmsg), %cx  
-	jmp printstr	
-printstr:
+	call printstr
+	jmp loop
+printstr:	
+	call clear
 	mov %cs, %ax  
-    	mov %ax, %es  
-	mov $0x00, %dh  
-	mov $0x00, %dl  
+    	mov %ax, %es
+	mov $80, %ax
+	mov %cx, %bx
+	sub %bx, %ax
+	mov $2, %bh
+	div %bh
+	sub $1, %al
+	mov $11, %dh  
+	mov %al, %dl  
 	mov $0x01, %al  
 	mov $0x13, %ah  
 	mov $0x0c, %bl  
-	mov $0x00, %bh  
-    	int $0x10  
+	mov $0x00, %bh
+    	int $0x10
+	ret
+clear:
+	mov $0x0, %ah
+	mov $0x3, %al
+	int $0x10
+	ret
+	/*mov $0x6, %ah
+    	mov $0x0, %al
+	mov $0, %ch
+	mov $0, %cl
+	mov $24, %dh
+	mov $79, %dl
+	mov $0x07, %bh
+	int $0x10
+	ret*/
 loop:
 	jmp loop
 failmsg:  
-    	.asciz  "Fail to mov get data\n"  
+    	.asciz  "Fail to mov get data. "  
 failmsgend:
 backmsg:
-	.asciz  "Why did you go back?\n"
+	.asciz  "Why did you go back? "
 backmsgend:
 .org 510
 .word 0xaa55
