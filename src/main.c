@@ -1,18 +1,30 @@
 #include "regs.h"
+#include "winctrl.h"
 #include "string.h"
+#include "keyboard.h"
 void main(void)
 {
-	struct biosregs ireg, oreg;
-	char*str="Hello world!";
-	initregs(&ireg);
-	ireg.bp=(u32)str;
-	ireg.cx=12;
-	ireg.dh=0x0;
-	ireg.dl=0x0;
-	ireg.al=0x01;
-	ireg.ah=0x13;
-	ireg.bl=0xc;
-	ireg.bh=0x0;
-	intcall(0x10, &ireg, &oreg);
-	while(1);
+	u32 i = 0;
+	winclear(Black, White);
+	union win_text text;
+	text.foreground_color = White;
+	text.background_color = Black;
+	text.blink = !Blink;
+	while(1)
+	{
+		text.ch = kb_getchar();
+		if(text.ch == 0x8)
+		{
+			if(i == 0)
+				continue;
+			i--;
+			text.ch = ' ';
+			winset_char(&text, (i % (WINX * WINY)) % WINX, (i % (WINX * WINY)) / WINX);
+			winset_cursor((i % (WINX * WINY)) % WINX, (i % (WINX * WINY)) / WINX);
+			continue;
+		}
+		winset_char(&text, (i % (WINX * WINY)) % WINX, (i % (WINX * WINY)) / WINX);
+		i++;
+		winset_cursor((i % (WINX * WINY)) % WINX, (i % (WINX * WINY)) / WINX);
+	}
 }
