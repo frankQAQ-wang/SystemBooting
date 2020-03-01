@@ -63,10 +63,12 @@ $(IMG_FILE): $(BIN_FILE)
 	@$(MAKE) -C $(TOOLS_DIR) BIN_FILE=$(BIN_FILE) IMG_FILE=$(IMG_FILE) FILE_SIZE=$(FILE_SIZE)
 run: all
 	qemu-system-x86_64 $(IMG_FILE)
+debug: all
+	qemu-system-x86_64 $(IMG_FILE) -s -S
 clean:
 	@$(MAKE) -C $(TOOLS_DIR) clean
 	rm -rf $(BUILD_DIR)
 disclean:
 	@$(MAKE) -C $(TOOLS_DIR) clean
 	rm -rf $(BUILD_DIR) $(IMG_FILE)
-.PHONY: all clean disclean run
+.PHONY: all clean disclean run debug

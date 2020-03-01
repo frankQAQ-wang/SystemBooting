@@ -124,6 +124,7 @@ void winset_char(union win_text *text, u8 x, u8 y)
 #else
 	u16 pos;
 	pos = WINX * y + x;
+	pos = pos % (WINX * WINY);
 	*((u16*)VGA_START_ADDR + pos) = text->val;
 #endif
 }
