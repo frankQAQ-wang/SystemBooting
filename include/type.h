@@ -5,4 +5,5 @@ typedef unsigned short u16;
 typedef unsigned int u32;
 typedef unsigned long long u64;
 typedef unsigned int size_t;
+#define NULL ((void*)0)
 #endif

@@ -65,10 +65,12 @@ run: all
 	qemu-system-x86_64 $(IMG_FILE)
 debug: all
 	qemu-system-x86_64 $(IMG_FILE) -s -S
+ctags:
+	ctags -R
 clean:
 	@$(MAKE) -C $(TOOLS_DIR) clean
 	rm -rf $(BUILD_DIR)
 disclean:
 	@$(MAKE) -C $(TOOLS_DIR) clean
-	rm -rf $(BUILD_DIR) $(IMG_FILE)
+	rm -rf $(BUILD_DIR) $(IMG_FILE) tags
 .PHONY: all clean disclean run debug

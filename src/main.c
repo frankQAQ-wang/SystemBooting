@@ -30,7 +30,7 @@ void main(void)
 		winset_char(&text, (i % (WINX * WINY)) % WINX, (i % (WINX * WINY)) / WINX);
 		i++;
 		winset_cursor((i % (WINX * WINY)) % WINX, (i % (WINX * WINY)) / WINX);
-	}*/
+	}
 	count = detect_memory_e820(entry);
 	for(i = 0; i < count; i++)
 	{
@@ -40,5 +40,6 @@ void main(void)
 		printhex(&text, 27, i, entry[i].lsize);
 		printhex(&text, 36, i, entry[i].type);
 	}	
-	while(1);
+	while(1);*/
+	jump32_func();
 }
